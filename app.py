@@ -5,7 +5,6 @@ from streamlit_drawable_canvas import st_canvas
 import openai
 import requests
 from io import BytesIO
-import numpy as np
 
 # GPT API 키 입력
 st.title("DALL·E 3 기반 포스터 만들기")
@@ -39,7 +38,7 @@ if st.button("이미지 생성"):
 
 # 그림 도구 설정
 drawing_mode = st.sidebar.selectbox(
-    "Drawing tool:", ("freedraw", "line", "rect", "circle", "transform", "text")
+    "Drawing tool:", ("freedraw", "line", "rect", "circle")
 )
 
 stroke_width = st.sidebar.slider("글자 크기:", 1, 25, 3)
@@ -78,7 +77,6 @@ if canvas_result.image_data is not None:
         combined_image = overlay_image
 
     # 합성된 이미지 표시
-    st.image(combined_image, caption="Final Image")
 
     # 이미지를 다운로드할 수 있는 형식으로 변환
     buf = BytesIO()
@@ -92,8 +90,3 @@ if canvas_result.image_data is not None:
         mime="image/png",
     )
 
-if canvas_result.json_data is not None:
-    objects = pd.json_normalize(canvas_result.json_data["objects"])  # PyArrow 때문에 obj를 str로 변환 필요
-    for col in objects.select_dtypes(include=['object']).columns:
-        objects[col] = objects[col].astype("str")
-    st.dataframe(objects)
