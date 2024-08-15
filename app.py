@@ -30,7 +30,7 @@ if st.button("이미지 생성"):
 
         # 이미지 가져오기 및 변환
         image_response = requests.get(image_url)
-        img_pil = Image.open(BytesIO(image_response.content)).convert("RGBA")
+        img_pil = Image.open(BytesIO(image_response.content)).convert("RGB")
         st.image(img_pil, caption="Generated Image", use_column_width=True)
 
         # 이미지를 그리기 위한 배경 이미지로 사용
