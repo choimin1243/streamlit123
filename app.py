@@ -30,7 +30,7 @@ if st.button("이미지 생성"):
 
         # 이미지 가져오기 및 변환
         image_response = requests.get(image_url)
-        img_pil = Image.open(BytesIO(image_response.content)).convert("RGB")
+        img_pil = Image.open(BytesIO(image_response.content))
         st.image(img_pil, caption="Generated Image", use_column_width=True)
 
         # 이미지를 그리기 위한 배경 이미지로 사용
@@ -62,18 +62,17 @@ canvas_result = st_canvas(
 
 # 이미지 데이터 및 경로 처리
 if canvas_result.image_data is not None:
-    # 캔버스에서 얻은 데이터를 RGB 형식으로 변환
+    # 캔버스에서 얻은 데이터를 RGBA 형식으로 변환
     overlay_image = Image.fromarray(canvas_result.image_data.astype('uint8'), 'RGB')
 
     # 배경 이미지와 합성
     if 'bg_image' in st.session_state:
         # 합성하기 위해서 배경 이미지와 오버레이 이미지를 같은 크기로 맞추기
-        background_image = st.session_state['bg_image'].copy()
-        overlay_image = overlay_image.resize(background_image.size)
+        background_image = st.session_state['bg_image'].copy().convert("RGBA")
+        overlay_image = overlay_image.resize(background_image.size).convert("RGBA")
 
-        # 배경 이미지 위에 오버레이 이미지 합성 (오버레이를 배경 위에 덮어쓰기)
-        background_image.paste(overlay_image, (0, 0), overlay_image)  # 세 번째 인자로 마스크 전달
-        combined_image = background_image
+        # 합성 이미지 생성
+        combined_image = Image.alpha_composite(background_image, overlay_image)
     else:
         combined_image = overlay_image
 
@@ -91,3 +90,4 @@ if canvas_result.image_data is not None:
         file_name="final_image.png",
         mime="image/png",
     )
+
