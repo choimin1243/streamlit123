@@ -34,7 +34,7 @@ if st.button("이미지 생성"):
         st.image(img_pil, caption="Generated Image", use_column_width=True)
 
         # 이미지를 그리기 위한 배경 이미지로 사용
-        st.session_state['bg_image'] = img_pil
+        st.session_state['bg_image'] = img_pil.convert("RGB")
 
 # 그림 도구 설정
 drawing_mode = st.sidebar.selectbox(
@@ -63,7 +63,7 @@ canvas_result = st_canvas(
 # 이미지 데이터 및 경로 처리
 if canvas_result.image_data is not None:
     # 캔버스에서 얻은 데이터를 RGBA 형식으로 변환
-    overlay_image = Image.fromarray(canvas_result.image_data.astype('uint8'), 'RGB')
+    overlay_image = Image.fromarray(canvas_result.image_data.astype('uint8'), 'RGBA')
 
     # 배경 이미지와 합성
     if 'bg_image' in st.session_state:
@@ -72,7 +72,7 @@ if canvas_result.image_data is not None:
         overlay_image = overlay_image.resize(background_image.size).convert("RGBA")
 
         # 합성 이미지 생성
-        combined_image = Image.alpha_composite(background_image, overlay_image)
+        combined_image = Image.alpha_composite(background_image, overlay_image).convert("RGBA")
     else:
         combined_image = overlay_image
 
