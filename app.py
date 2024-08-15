@@ -63,12 +63,12 @@ canvas_result = st_canvas(
 # 이미지 데이터 및 경로 처리
 if canvas_result.image_data is not None:
     # 캔버스에서 얻은 데이터를 RGBA 형식으로 변환
-    overlay_image = Image.fromarray(canvas_result.image_data.astype('uint8'), 'RGBA')
+    overlay_image = Image.fromarray(canvas_result.image_data.astype('uint8'), 'RGB')
 
     # 배경 이미지와 합성
     if 'bg_image' in st.session_state:
         # 합성하기 위해서 배경 이미지와 오버레이 이미지를 같은 크기로 맞추기
-        background_image = st.session_state['bg_image'].copy().convert("RGBA")
+        background_image = st.session_state['bg_image'].copy().convert("RGB")
         overlay_image = overlay_image.resize(background_image.size)
 
         # 합성 이미지 생성
