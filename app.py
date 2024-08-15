@@ -77,6 +77,7 @@ if canvas_result.image_data is not None:
         combined_image = overlay_image
 
     # 합성된 이미지 표시
+    st.image(combined_image, caption="Final Image")
 
     # 이미지를 다운로드할 수 있는 형식으로 변환
     buf = BytesIO()
